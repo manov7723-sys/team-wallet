@@ -44,3 +44,17 @@ package-lock.json
 
 
 public/uploads.env
+
+
+.env
+.env.local
+.env.*.local
+.DS_Store
+.idea/
+.vscode/
+*.log
+*.pid
+node_modules/
+.next/
+out/
+coverage/
