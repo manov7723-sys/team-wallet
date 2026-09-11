@@ -1,0 +1,1115 @@
+{
+  "address": "2CeVF4gvaMV6GGF7pSbZgyrP7YtWwALRVAi8CcPP3t72",
+  "metadata": {
+    "name": "teamwallet",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "cancel_expired_proposal",
+      "docs": ["Cancel an expired proposal (anyone can call)"],
+      "discriminator": [199, 85, 251, 59, 88, 227, 154, 78],
+      "accounts": [
+        {
+          "name": "proposal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [112, 114, 111, 112, 111, 115, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "team_wallet"
+              },
+              {
+                "kind": "account",
+                "path": "proposal.nonce",
+                "account": "Proposal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "team_wallet",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [116, 101, 97, 109, 95, 119, 97, 108, 108, 101, 116]
+              },
+              {
+                "kind": "account",
+                "path": "team_wallet.owner",
+                "account": "TeamWallet"
+              },
+              {
+                "kind": "account",
+                "path": "team_wallet.name",
+                "account": "TeamWallet"
+              }
+            ]
+          }
+        },
+        {
+          "name": "caller",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "cancel_proposal",
+      "docs": ["Cancel an active proposal (proposer or owner only)"],
+      "discriminator": [106, 74, 128, 146, 19, 65, 39, 23],
+      "accounts": [
+        {
+          "name": "proposal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [112, 114, 111, 112, 111, 115, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "team_wallet"
+              },
+              {
+                "kind": "account",
+                "path": "proposal.nonce",
+                "account": "Proposal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "team_wallet",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [116, 101, 97, 109, 95, 119, 97, 108, 108, 101, 116]
+              },
+              {
+                "kind": "account",
+                "path": "team_wallet.owner",
+                "account": "TeamWallet"
+              },
+              {
+                "kind": "account",
+                "path": "team_wallet.name",
+                "account": "TeamWallet"
+              }
+            ]
+          }
+        },
+        {
+          "name": "canceller",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "close_proposal",
+      "docs": ["Close a proposal account (after executed or cancelled)"],
+      "discriminator": [213, 178, 139, 19, 50, 191, 82, 245],
+      "accounts": [
+        {
+          "name": "proposal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [112, 114, 111, 112, 111, 115, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "team_wallet"
+              },
+              {
+                "kind": "account",
+                "path": "proposal.nonce",
+                "account": "Proposal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "team_wallet",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [116, 101, 97, 109, 95, 119, 97, 108, 108, 101, 116]
+              },
+              {
+                "kind": "account",
+                "path": "team_wallet.owner",
+                "account": "TeamWallet"
+              },
+              {
+                "kind": "account",
+                "path": "team_wallet.name",
+                "account": "TeamWallet"
+              }
+            ]
+          }
+        },
+        {
+          "name": "closer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "rent_receiver",
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "create_proposal",
+      "docs": ["Create a proposal for any action type"],
+      "discriminator": [132, 116, 68, 174, 216, 160, 198, 22],
+      "accounts": [
+        {
+          "name": "proposal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [112, 114, 111, 112, 111, 115, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "team_wallet"
+              },
+              {
+                "kind": "arg",
+                "path": "nonce"
+              }
+            ]
+          }
+        },
+        {
+          "name": "team_wallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [116, 101, 97, 109, 95, 119, 97, 108, 108, 101, 116]
+              },
+              {
+                "kind": "account",
+                "path": "team_wallet.owner",
+                "account": "TeamWallet"
+              },
+              {
+                "kind": "account",
+                "path": "team_wallet.name",
+                "account": "TeamWallet"
+              }
+            ]
+          }
+        },
+        {
+          "name": "proposer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "action",
+          "type": {
+            "defined": {
+              "name": "ProposalAction"
+            }
+          }
+        },
+        {
+          "name": "nonce",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "execute_proposal",
+      "docs": [
+        "Execute any approved proposal",
+        "",
+        "For swap proposals, pass swap_data from Jupiter.",
+        "For other proposals, pass None.",
+        "",
+        "Remaining accounts depend on proposal type - see REMAINING_ACCOUNTS.md"
+      ],
+      "discriminator": [186, 60, 116, 133, 108, 128, 111, 28],
+      "accounts": [
+        {
+          "name": "proposal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [112, 114, 111, 112, 111, 115, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "team_wallet"
+              },
+              {
+                "kind": "account",
+                "path": "proposal.nonce",
+                "account": "Proposal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "team_wallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [116, 101, 97, 109, 95, 119, 97, 108, 108, 101, 116]
+              },
+              {
+                "kind": "account",
+                "path": "team_wallet.owner",
+                "account": "TeamWallet"
+              },
+              {
+                "kind": "account",
+                "path": "team_wallet.name",
+                "account": "TeamWallet"
+              }
+            ]
+          }
+        },
+        {
+          "name": "executor",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "swap_data",
+          "type": {
+            "option": "bytes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "initialize_team_wallet",
+      "docs": ["Initialize a new team wallet"],
+      "discriminator": [247, 50, 240, 29, 76, 37, 5, 145],
+      "accounts": [
+        {
+          "name": "team_wallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [116, 101, 97, 109, 95, 119, 97, 108, 108, 101, 116]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              },
+              {
+                "kind": "arg",
+                "path": "name"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "vote_threshold",
+          "type": "u8"
+        },
+        {
+          "name": "voters",
+          "type": {
+            "vec": "pubkey"
+          }
+        }
+      ]
+    },
+    {
+      "name": "transfer_freeze_authority",
+      "docs": ["Transfer freeze authority to team wallet"],
+      "discriminator": [235, 44, 91, 221, 224, 5, 187, 172],
+      "accounts": [
+        {
+          "name": "team_wallet"
+        },
+        {
+          "name": "mint",
+          "writable": true
+        },
+        {
+          "name": "current_authority",
+          "signer": true
+        },
+        {
+          "name": "token_program"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "transfer_mint_authority",
+      "docs": ["Transfer mint authority to team wallet"],
+      "discriminator": [87, 237, 187, 84, 168, 175, 241, 75],
+      "accounts": [
+        {
+          "name": "team_wallet"
+        },
+        {
+          "name": "mint",
+          "writable": true
+        },
+        {
+          "name": "current_authority",
+          "signer": true
+        },
+        {
+          "name": "token_program"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "transfer_program_authority",
+      "docs": ["Transfer program upgrade authority to team wallet"],
+      "discriminator": [133, 0, 66, 166, 130, 239, 5, 130],
+      "accounts": [
+        {
+          "name": "team_wallet"
+        },
+        {
+          "name": "program_id",
+          "writable": true
+        },
+        {
+          "name": "program_data",
+          "writable": true
+        },
+        {
+          "name": "current_authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "bpf_loader_upgradeable_program"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "vote_proposal",
+      "docs": ["Vote on any proposal"],
+      "discriminator": [247, 104, 114, 240, 237, 41, 200, 36],
+      "accounts": [
+        {
+          "name": "proposal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [112, 114, 111, 112, 111, 115, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "team_wallet"
+              },
+              {
+                "kind": "account",
+                "path": "proposal.nonce",
+                "account": "Proposal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "team_wallet",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [116, 101, 97, 109, 95, 119, 97, 108, 108, 101, 116]
+              },
+              {
+                "kind": "account",
+                "path": "team_wallet.owner",
+                "account": "TeamWallet"
+              },
+              {
+                "kind": "account",
+                "path": "team_wallet.name",
+                "account": "TeamWallet"
+              }
+            ]
+          }
+        },
+        {
+          "name": "voter",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "vote_for",
+          "type": "bool"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Proposal",
+      "discriminator": [26, 94, 189, 187, 116, 136, 53, 33]
+    },
+    {
+      "name": "TeamWallet",
+      "discriminator": [129, 241, 44, 225, 129, 55, 165, 166]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "MaxVotersReached",
+      "msg": "Maximum number of voters reached (15)"
+    },
+    {
+      "code": 6001,
+      "name": "MaxContributorsReached",
+      "msg": "Maximum number of contributors reached (15)"
+    },
+    {
+      "code": 6002,
+      "name": "VoterAlreadyExists",
+      "msg": "Voter already exists"
+    },
+    {
+      "code": 6003,
+      "name": "VoterNotFound",
+      "msg": "Voter not found"
+    },
+    {
+      "code": 6004,
+      "name": "ContributorAlreadyExists",
+      "msg": "Contributor already exists"
+    },
+    {
+      "code": 6005,
+      "name": "ContributorNotFound",
+      "msg": "Contributor not found"
+    },
+    {
+      "code": 6006,
+      "name": "CannotRemoveOwner",
+      "msg": "Cannot remove the owner"
+    },
+    {
+      "code": 6007,
+      "name": "DuplicateVoter",
+      "msg": "Duplicate voter in initialization list"
+    },
+    {
+      "code": 6008,
+      "name": "OwnerInMembersList",
+      "msg": "Owner cannot be in voters list"
+    },
+    {
+      "code": 6009,
+      "name": "AlreadyAVoter",
+      "msg": "User is already a voter"
+    },
+    {
+      "code": 6010,
+      "name": "InvalidThreshold",
+      "msg": "Invalid threshold value"
+    },
+    {
+      "code": 6011,
+      "name": "NotAVoterOrContributor",
+      "msg": "Not a voter or contributor"
+    },
+    {
+      "code": 6012,
+      "name": "NotAuthorizedToCreate",
+      "msg": "Not authorized to create proposals (only owner/contributors)"
+    },
+    {
+      "code": 6013,
+      "name": "NotAuthorizedToVote",
+      "msg": "Not authorized to vote"
+    },
+    {
+      "code": 6014,
+      "name": "AlreadyVoted",
+      "msg": "Already voted on this proposal"
+    },
+    {
+      "code": 6015,
+      "name": "ProposalAlreadyExecuted",
+      "msg": "Proposal already executed"
+    },
+    {
+      "code": 6016,
+      "name": "ProposalAlreadyCancelled",
+      "msg": "Proposal has been cancelled"
+    },
+    {
+      "code": 6017,
+      "name": "ProposalExpired",
+      "msg": "Proposal has expired"
+    },
+    {
+      "code": 6018,
+      "name": "ProposalNotExpired",
+      "msg": "Proposal has not expired yet"
+    },
+    {
+      "code": 6019,
+      "name": "InsufficientVotes",
+      "msg": "Insufficient votes to execute"
+    },
+    {
+      "code": 6020,
+      "name": "NotAuthorizedToCancel",
+      "msg": "Not authorized to cancel"
+    },
+    {
+      "code": 6021,
+      "name": "NotAuthorizedToExecute",
+      "msg": "Not authorized to execute (only proposal creator)"
+    },
+    {
+      "code": 6022,
+      "name": "InvalidProposalType",
+      "msg": "Invalid proposal type for this operation"
+    },
+    {
+      "code": 6023,
+      "name": "SameMintSwap",
+      "msg": "Cannot swap same mint"
+    },
+    {
+      "code": 6024,
+      "name": "SlippageTooHigh",
+      "msg": "Slippage too high (max 50%)"
+    },
+    {
+      "code": 6025,
+      "name": "SwapExecutionWindowExpired",
+      "msg": "Swap execution window expired"
+    },
+    {
+      "code": 6026,
+      "name": "SlippageExceeded",
+      "msg": "Slippage exceeded"
+    },
+    {
+      "code": 6027,
+      "name": "SwapNotApproved",
+      "msg": "Swap not yet approved"
+    },
+    {
+      "code": 6028,
+      "name": "InvalidMint",
+      "msg": "Invalid mint address"
+    },
+    {
+      "code": 6029,
+      "name": "InvalidTokenAccountOwner",
+      "msg": "Invalid token account owner"
+    },
+    {
+      "code": 6030,
+      "name": "InsufficientBalance",
+      "msg": "Insufficient balance"
+    },
+    {
+      "code": 6031,
+      "name": "InvalidAmount",
+      "msg": "Invalid amount"
+    },
+    {
+      "code": 6032,
+      "name": "RecipientRequired",
+      "msg": "Recipient required"
+    },
+    {
+      "code": 6033,
+      "name": "MetadataRequired",
+      "msg": "Metadata required"
+    },
+    {
+      "code": 6034,
+      "name": "AuthorityMissing",
+      "msg": "Authority missing"
+    },
+    {
+      "code": 6035,
+      "name": "InvalidUpgradeBuffer",
+      "msg": "Invalid upgrade buffer"
+    },
+    {
+      "code": 6036,
+      "name": "InvalidProgramData",
+      "msg": "Invalid program data account"
+    },
+    {
+      "code": 6037,
+      "name": "InvalidRemainingAccounts",
+      "msg": "Invalid remaining accounts"
+    },
+    {
+      "code": 6038,
+      "name": "InvalidData",
+      "msg": "Invalid data"
+    },
+    {
+      "code": 6039,
+      "name": "Overflow",
+      "msg": "Overflow"
+    }
+  ],
+  "types": [
+    {
+      "name": "Proposal",
+      "docs": ["Unified proposal account for all action types"],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "team_wallet",
+            "docs": ["Team wallet this proposal belongs to"],
+            "type": "pubkey"
+          },
+          {
+            "name": "proposer",
+            "docs": ["Who created this proposal"],
+            "type": "pubkey"
+          },
+          {
+            "name": "action",
+            "docs": ["The action to be executed"],
+            "type": {
+              "defined": {
+                "name": "ProposalAction"
+              }
+            }
+          },
+          {
+            "name": "votes_for",
+            "docs": ["Number of approve votes"],
+            "type": "u8"
+          },
+          {
+            "name": "votes_against",
+            "docs": ["Number of reject votes"],
+            "type": "u8"
+          },
+          {
+            "name": "voters_voted",
+            "docs": ["Indices of voters who have voted (1 byte each)"],
+            "type": "bytes"
+          },
+          {
+            "name": "snapshot_voters",
+            "docs": ["Snapshot of eligible voters at creation time"],
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "snapshot_threshold",
+            "docs": ["Snapshot of threshold at creation time (for auto-cancel logic)"],
+            "type": "u8"
+          },
+          {
+            "name": "executed",
+            "docs": ["Whether proposal has been executed"],
+            "type": "bool"
+          },
+          {
+            "name": "cancelled",
+            "docs": ["Whether proposal has been cancelled"],
+            "type": "bool"
+          },
+          {
+            "name": "created_at",
+            "docs": ["When proposal was created"],
+            "type": "i64"
+          },
+          {
+            "name": "expires_at",
+            "docs": ["When proposal expires"],
+            "type": "i64"
+          },
+          {
+            "name": "approved",
+            "docs": ["Whether threshold has been reached (for swap execution window)"],
+            "type": "bool"
+          },
+          {
+            "name": "approved_at",
+            "docs": ["When approval threshold was reached"],
+            "type": "i64"
+          },
+          {
+            "name": "execution_window",
+            "docs": ["Execution window in seconds (for swaps)"],
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "nonce",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProposalAction",
+      "docs": ["All possible proposal actions in a single enum"],
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "TransferSol",
+            "fields": [
+              {
+                "name": "amount",
+                "type": "u64"
+              },
+              {
+                "name": "recipient",
+                "type": "pubkey"
+              }
+            ]
+          },
+          {
+            "name": "TransferToken",
+            "fields": [
+              {
+                "name": "amount",
+                "type": "u64"
+              },
+              {
+                "name": "recipient",
+                "type": "pubkey"
+              },
+              {
+                "name": "mint",
+                "type": "pubkey"
+              }
+            ]
+          },
+          {
+            "name": "Swap",
+            "fields": [
+              {
+                "name": "input_mint",
+                "type": "pubkey"
+              },
+              {
+                "name": "output_mint",
+                "type": "pubkey"
+              },
+              {
+                "name": "amount_in",
+                "type": "u64"
+              },
+              {
+                "name": "min_amount_out",
+                "type": "u64"
+              },
+              {
+                "name": "slippage_bps",
+                "type": "u16"
+              }
+            ]
+          },
+          {
+            "name": "ChangeThreshold",
+            "fields": [
+              {
+                "name": "new_threshold",
+                "type": "u8"
+              }
+            ]
+          },
+          {
+            "name": "AddVoter",
+            "fields": [
+              {
+                "name": "voter",
+                "type": "pubkey"
+              }
+            ]
+          },
+          {
+            "name": "RemoveVoter",
+            "fields": [
+              {
+                "name": "voter",
+                "type": "pubkey"
+              }
+            ]
+          },
+          {
+            "name": "AddContributor",
+            "fields": [
+              {
+                "name": "contributor",
+                "type": "pubkey"
+              }
+            ]
+          },
+          {
+            "name": "RemoveContributor",
+            "fields": [
+              {
+                "name": "contributor",
+                "type": "pubkey"
+              }
+            ]
+          },
+          {
+            "name": "UpgradeProgram",
+            "fields": [
+              {
+                "name": "program_id",
+                "type": "pubkey"
+              },
+              {
+                "name": "buffer",
+                "type": "pubkey"
+              },
+              {
+                "name": "spill",
+                "type": "pubkey"
+              }
+            ]
+          },
+          {
+            "name": "DeleteProgram",
+            "fields": [
+              {
+                "name": "program_id",
+                "type": "pubkey"
+              },
+              {
+                "name": "spill",
+                "type": "pubkey"
+              }
+            ]
+          },
+          {
+            "name": "TokenMint",
+            "fields": [
+              {
+                "name": "mint",
+                "type": "pubkey"
+              },
+              {
+                "name": "amount",
+                "type": "u64"
+              },
+              {
+                "name": "recipient",
+                "type": "pubkey"
+              }
+            ]
+          },
+          {
+            "name": "TokenBurn",
+            "fields": [
+              {
+                "name": "mint",
+                "type": "pubkey"
+              },
+              {
+                "name": "amount",
+                "type": "u64"
+              }
+            ]
+          },
+          {
+            "name": "TokenFreeze",
+            "fields": [
+              {
+                "name": "mint",
+                "type": "pubkey"
+              },
+              {
+                "name": "account",
+                "type": "pubkey"
+              }
+            ]
+          },
+          {
+            "name": "TokenThaw",
+            "fields": [
+              {
+                "name": "mint",
+                "type": "pubkey"
+              },
+              {
+                "name": "account",
+                "type": "pubkey"
+              }
+            ]
+          },
+          {
+            "name": "TokenSetMintAuthority",
+            "fields": [
+              {
+                "name": "mint",
+                "type": "pubkey"
+              },
+              {
+                "name": "new_authority",
+                "type": {
+                  "option": "pubkey"
+                }
+              }
+            ]
+          },
+          {
+            "name": "TokenSetFreezeAuthority",
+            "fields": [
+              {
+                "name": "mint",
+                "type": "pubkey"
+              },
+              {
+                "name": "new_authority",
+                "type": {
+                  "option": "pubkey"
+                }
+              }
+            ]
+          },
+          {
+            "name": "TokenUpdateMetadata",
+            "fields": [
+              {
+                "name": "mint",
+                "type": "pubkey"
+              },
+              {
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "name": "symbol",
+                "type": "string"
+              },
+              {
+                "name": "uri",
+                "type": "string"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "TeamWallet",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "voters",
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "contributors",
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "voter_count",
+            "type": "u8"
+          },
+          {
+            "name": "vote_threshold",
+            "type": "u8"
+          },
+          {
+            "name": "proposal_count",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Team Wallet",
+  "short_name": "TeamWallet",
+  "description": "Multi-sig treasury management on Solana",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafbfd",
+  "theme_color": "#013870",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32 48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
