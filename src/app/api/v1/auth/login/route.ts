@@ -51,15 +51,15 @@ export async function POST(req: NextRequest) {
 
     // ── Registration gate: only allow existing wallets ───────
     const user = await User.findOne({ walletAddress });
-    if (!user) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "New registrations are currently restricted. Please contact Tecneural to get access.",
-        },
-        { status: 403 },
-      );
-    }
+    // if (!user) {
+    //   return NextResponse.json(
+    //     {
+    //       success: false,
+    //       error: "New registrations are currently restricted. Please contact Tecneural to get access.",
+    //     },
+    //     { status: 403 },
+    //   );
+    // }
 
     user.lastLoginAt = new Date();
     await user.save();
