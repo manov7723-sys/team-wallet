@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: team-wallet
+  namespace: den
+  labels:
+    app.kubernetes.io/name: team-wallet
+    app.kubernetes.io/managed-by: deepagent
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: team-wallet
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
