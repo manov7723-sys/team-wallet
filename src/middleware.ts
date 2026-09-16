@@ -16,6 +16,9 @@ import { NextRequest, NextResponse } from "next/server";
 const encoder = new TextEncoder();
 
 export async function middleware(req: NextRequest) {
+  // Injected by DeepAgent: never intercept the health probe (kubelet has no Authorization header).
+  if (new URL(req.url).pathname === "/api/health") return NextResponse.next();
+
   const { pathname } = req.nextUrl;
 
   if (req.method === "OPTIONS" || pathname.startsWith("/api/v1/auth")) {
