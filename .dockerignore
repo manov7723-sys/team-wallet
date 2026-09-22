@@ -5,6 +5,16 @@ node_modules
 npm-debug.log*
 yarn-error.log*
 .pnpm-store
+# Python: a developer's virtualenv and caches must never enter the image —
+# `COPY . .` would ship a host-built .venv the container cannot use.
+.venv
+venv
+__pycache__
+*.pyc
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.tox
 dist
 build
 out
