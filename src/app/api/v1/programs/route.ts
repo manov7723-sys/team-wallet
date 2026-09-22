@@ -1,5 +1,5 @@
 /**
- * Extracts the wallet address from request headers.
+ * Extracts the wallet address from request headers
  *
  * @param {NextRequest} req - Incoming request object
  * @returns {string | null} Wallet address if present, otherwise null
