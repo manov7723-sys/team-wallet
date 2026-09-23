@@ -37,7 +37,7 @@ spec:
           image: 411232894985.dkr.ecr.us-east-1.amazonaws.com/team-wallet:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 3000
+            - containerPort: 3001
           resources:
             requests:
               cpu: 100m
