@@ -17,7 +17,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: dev
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    # dda:release-gate
+    if: ${{ github.event_name == 'workflow_dispatch' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
