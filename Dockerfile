@@ -45,6 +45,18 @@ RUN if node -e "process.exit(require('./package.json').scripts?.build ? 0 : 1)";
 # --- Runtime: non-root built-in `node` user ---
 FROM --platform=linux/amd64 node:20-bookworm-slim AS runner
 ENV NODE_ENV=production
+# Caches must live on the ONE writable mount of a hardened pod. The deploy
+# manifest runs this container with readOnlyRootFilesystem: true and a
+# writable emptyDir at /tmp only (security-profile.ts, restricted profile).
+# @swc/core ships its native binding compressed and decompresses it into a
+# cache directory on first require — with HOME on the read-only layer that
+# write is EROFS and Next dies loading next.config.ts (2026-09-29,
+# team-wallet: 'SWC native addon: create cache root /home/node/.cache:
+# Read-only file system', CrashLoopBackOff). XDG_CACHE_HOME moves every
+# well-behaved cache to /tmp; SWC_NATIVE_BINDING_CACHE is swc's own
+# explicit knob for the same path.
+ENV XDG_CACHE_HOME=/tmp/.cache
+ENV SWC_NATIVE_BINDING_CACHE=/tmp/.cache/swc-native
 WORKDIR /app
 # Copy the built app WITH its node_modules from the builder (avoids a second
 # install and guarantees framework binaries + build output are present).
