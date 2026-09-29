@@ -41,22 +41,34 @@ RUN if node -e "process.exit(require('./package.json').scripts?.build ? 0 : 1)";
     else \
       echo "no build script — skipping"; \
     fi
+# SWC native binding: make the runtime require() need NO cache, EVER.
+# Newer @swc/core ships its .node binary compressed and decompresses it
+# into a cache directory on first require. The hardened pod cannot offer
+# one: HOME is on the read-only layer (EROFS), and the only writable
+# mount is a Kubernetes emptyDir at /tmp — mounted 0777 WITHOUT the
+# sticky bit, which swc's loader rejects as untrusted ('cache root has a
+# parent writable by another user without trusted sticky protection').
+# Meanwhile `docker run --tmpfs /tmp:mode=1777` HAS the sticky bit, so
+# the CI smoke passed the exact image the pod then crash-looped on
+# (2026-09-29, team-wallet, twice). Fix at BUILD time instead: trigger
+# the decompression here, where the filesystem is writable, then copy
+# the materialized binary next to each binding.js — the loader's FIRST
+# strategy, require('./swc.<platform>.node'), a plain require with no
+# cache validation at all. The final `env HOME=/nonexistent …` require
+# PROVES each copy loads with no HOME and no cache; a repo whose swc
+# cannot load that way fails THIS build, not the pod.
+RUN set -e;     for d in $(find node_modules -type d -path '*/@swc/core'); do       rm -rf /app/.swc-mat;       XDG_CACHE_HOME=/app/.swc-mat SWC_NATIVE_BINDING_CACHE=/app/.swc-mat         node -e "require(process.argv[1])" "/app/$d" >/dev/null 2>&1 || true;       f=$(find /app/.swc-mat -name '*.node' 2>/dev/null | head -1);       if [ -n "$f" ]; then cp "$f" "/app/$d/swc.linux-x64-gnu.node"; fi;       rm -rf /app/.swc-mat;       env HOME=/nonexistent XDG_CACHE_HOME=/nonexistent SWC_NATIVE_BINDING_CACHE=/nonexistent         node -e "require(process.argv[1])" "/app/$d";     done
 
 # --- Runtime: non-root built-in `node` user ---
 FROM --platform=linux/amd64 node:20-bookworm-slim AS runner
 ENV NODE_ENV=production
-# Caches must live on the ONE writable mount of a hardened pod. The deploy
-# manifest runs this container with readOnlyRootFilesystem: true and a
-# writable emptyDir at /tmp only (security-profile.ts, restricted profile).
-# @swc/core ships its native binding compressed and decompresses it into a
-# cache directory on first require — with HOME on the read-only layer that
-# write is EROFS and Next dies loading next.config.ts (2026-09-29,
-# team-wallet: 'SWC native addon: create cache root /home/node/.cache:
-# Read-only file system', CrashLoopBackOff). XDG_CACHE_HOME moves every
-# well-behaved cache to /tmp; SWC_NATIVE_BINDING_CACHE is swc's own
-# explicit knob for the same path.
+# General caches belong on the pod's one writable mount (the /tmp
+# emptyDir; the root filesystem is read-only under the restricted
+# profile). The SWC native binding deliberately does NOT rely on this —
+# it is baked next to binding.js at build time above, because swc
+# refuses any cache under a non-sticky world-writable parent and a
+# Kubernetes emptyDir is exactly that.
 ENV XDG_CACHE_HOME=/tmp/.cache
-ENV SWC_NATIVE_BINDING_CACHE=/tmp/.cache/swc-native
 WORKDIR /app
 # Copy the built app WITH its node_modules from the builder (avoids a second
 # install and guarantees framework binaries + build output are present).
@@ -80,4 +92,4 @@ EXPOSE 3000
 # readiness probe, which asks the app-defined path.
 HEALTHCHECK --interval=15s --timeout=5s --start-period=20s --retries=3 \
     CMD node -e "require('http').get('http://127.0.0.1:3000/', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))"
-CMD ["sh", "-c", "export PATH=/app/node_modules/.bin:$PATH; exec next start"]
+CMD ["next", "start"]
