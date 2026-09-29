@@ -54,10 +54,15 @@ RUN if node -e "process.exit(require('./package.json').scripts?.build ? 0 : 1)";
 # the decompression here, where the filesystem is writable, then copy
 # the materialized binary next to each binding.js — the loader's FIRST
 # strategy, require('./swc.<platform>.node'), a plain require with no
-# cache validation at all. The final `env HOME=/nonexistent …` require
-# PROVES each copy loads with no HOME and no cache; a repo whose swc
-# cannot load that way fails THIS build, not the pod.
-RUN set -e;     for d in $(find node_modules -type d -path '*/@swc/core'); do       rm -rf /app/.swc-mat;       XDG_CACHE_HOME=/app/.swc-mat SWC_NATIVE_BINDING_CACHE=/app/.swc-mat         node -e "require(process.argv[1])" "/app/$d" >/dev/null 2>&1 || true;       f=$(find /app/.swc-mat -name '*.node' 2>/dev/null | head -1);       if [ -n "$f" ]; then cp "$f" "/app/$d/swc.linux-x64-gnu.node"; fi;       rm -rf /app/.swc-mat;       env HOME=/nonexistent XDG_CACHE_HOME=/nonexistent SWC_NATIVE_BINDING_CACHE=/nonexistent         node -e "require(process.argv[1])" "/app/$d";     done
+# cache validation at all. chmod 0755 because the materializer writes
+# the cache file owner-read-only for ROOT — the runtime uid 1000 got
+# 'cannot open shared object file: Permission denied' from the copy
+# (2026-09-29, image ac1d525a). The final verification require runs AS
+# THE node USER for the same reason: a root-run check reads any file
+# and proved nothing. It PROVES each copy loads with no HOME, no cache
+# and no root; a repo whose swc cannot load that way fails THIS build,
+# not the pod.
+RUN set -e;     for d in $(find node_modules -type d -path '*/@swc/core'); do       rm -rf /app/.swc-mat;       XDG_CACHE_HOME=/app/.swc-mat SWC_NATIVE_BINDING_CACHE=/app/.swc-mat         node -e "require(process.argv[1])" "/app/$d" >/dev/null 2>&1 || true;       f=$(find /app/.swc-mat -name '*.node' 2>/dev/null | head -1);       if [ -n "$f" ]; then         cp "$f" "/app/$d/swc.linux-x64-gnu.node";         chmod 0755 "/app/$d/swc.linux-x64-gnu.node";       fi;       rm -rf /app/.swc-mat;       if id -u node >/dev/null 2>&1; then         su -s /bin/sh node -c "HOME=/nonexistent XDG_CACHE_HOME=/nonexistent SWC_NATIVE_BINDING_CACHE=/nonexistent node -e \"require(process.argv[1])\" /app/$d";       else         env HOME=/nonexistent XDG_CACHE_HOME=/nonexistent SWC_NATIVE_BINDING_CACHE=/nonexistent           node -e "require(process.argv[1])" "/app/$d";       fi;     done
 
 # --- Runtime: non-root built-in `node` user ---
 FROM --platform=linux/amd64 node:20-bookworm-slim AS runner
