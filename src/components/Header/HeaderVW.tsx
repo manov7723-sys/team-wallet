@@ -95,7 +95,6 @@ export default function HeaderVW() {
             <Button
               label={
                 <>
-                  <Wallet className="size-4.5" />
                   {t("Connect Wallet")}
                 </>
               }
