@@ -17,7 +17,7 @@ export interface NFTMeta {
  * - Otherwise, returns a proxied URL to fetch the image via `/api/v1/proxy/ipfs`.
  *
  * @param {string} uri - The URI of the NFT metadata image.
- * @returns {string | null} - The resolved image URL or null if invalid.
+ * @returns {string | null} - The resolved image URL or null if invalid
  */
 function uriToImgSrc(uri: string): string | null {
   if (!uri || uri.length < 5) return null;
